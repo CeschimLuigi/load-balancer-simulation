@@ -5,7 +5,9 @@
         "paths": {
             "@/*":["./src/*"]
         },
-        "module": "esnext",
+        "module": "nodenext",
+        "rootDir": "./src",
+        "outDir": "./build",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
@@ -14,7 +16,11 @@
     },
     
     
+    "include": [
+        "src/**/*"
+    ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "build"
     ]
 }

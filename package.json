@@ -2,9 +2,13 @@
   "name": "cluster-api",
   "version": "1.0.0",
   "description": "servidor api para testar cluster de balanceador de carga",
-  "main": "src/server.ts",
+  "main": "build/server.js",
   "scripts": {
-    "dev": "tsx --watch src/server.ts"
+    "dev": "tsx --watch src/server.ts",
+    "clean": "rm -rf build",
+    "build": "npm run clean && tsc",
+    "prestart": "npm run build",
+    "start": "node build/server.js"
   },
   "author": "Luigi Ceschim",
   "license": "ISC",
