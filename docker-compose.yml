@@ -1,0 +1,19 @@
+services:
+  api:
+    image: mini-cluster-api 
+    deploy:
+      replicas: 3 
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80" 
+    configs:
+      - source: nginx_custom_config
+        target: /etc/nginx/nginx.conf
+    deploy:
+      replicas: 1
+configs:
+  nginx_custom_config:
+    file: ./nginx.conf
+      
