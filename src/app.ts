@@ -1,5 +1,6 @@
 import express from "express"
 import os from "os"
+import { statusHandler } from "./status"
 
 
 const app = express()
@@ -13,5 +14,7 @@ app.get("/cluster", (req, res)=>{
     return res.json({message:`REQUISIÇÃO PROCESSADA COM SUCESSO, IMPLEMENTAÇÃO TESTE FUNCIONANDO`, clusterId: id})
 
 });
+
+app.get("/status", statusHandler)
 
 export {app}
