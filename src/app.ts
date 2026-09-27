@@ -10,7 +10,7 @@ app.get("/cluster", (req, res)=>{
     const id = os.hostname()
 
     
-    return res.json({message:`REQUISIÇÃO PROCESSADA COM SUCESSO COM CLUSTER ID: ${id}`})
+    return res.json({message:`REQUISIÇÃO PROCESSADA COM SUCESSO, IMPLEMENTAÇÃO TESTE FUNCIONANDO`, clusterId: id})
 
 });
 
