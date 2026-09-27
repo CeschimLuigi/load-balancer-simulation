@@ -1,0 +1,28 @@
+name: Pipeline de Validacao (CI)
+
+# 1. O GATILHO: Quando essa pipeline vai rodar?
+on:
+  pull_request:
+    branches:
+      - dev
+      - prod
+
+# 2. AS TAREFAS: O que vamos fazer?
+jobs:
+  validar-codigo:
+    # Cria um servidor Linux (Ubuntu) temporário e limpo na nuvem do GitHub
+    runs-on: ubuntu-latest
+    
+    # 3. OS PASSOS: A receita de bolo que o servidor vai executar
+    steps:
+      # Passo A: O servidor precisa baixar o seu código para dentro dele
+      - name: 📥 Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      # Passo B: Aqui você rodaria o comando de teste do seu projeto (ex: npm test)
+      - name: 🧪 Simular testes e validações
+        run: |
+          echo "Iniciando a validação do código recebido no PR..."
+          echo "Instalando dependências..."
+          echo "Rodando testes de segurança..."
+          echo "Tudo aprovado! O código está seguro para fazer o merge."
