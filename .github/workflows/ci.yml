@@ -1,28 +1,46 @@
 name: Pipeline de Validacao (CI)
 
-# 1. O GATILHO: Quando essa pipeline vai rodar?
 on:
   pull_request:
-    branches:
-      - dev
-      - prod
+    branches: [DEV, main]
+  push:
+    branches: [main]
 
-# 2. AS TAREFAS: O que vamos fazer?
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validar-codigo:
-    # Cria um servidor Linux (Ubuntu) temporário e limpo na nuvem do GitHub
     runs-on: ubuntu-latest
-    
-    # 3. OS PASSOS: A receita de bolo que o servidor vai executar
     steps:
-      # Passo A: O servidor precisa baixar o seu código para dentro dele
-      - name: 📥 Baixar o código do repositório
+      - name: 📥 Baixar o código
         uses: actions/checkout@v4
 
-      # Passo B: Aqui você rodaria o comando de teste do seu projeto (ex: npm test)
-      - name: 🧪 Simular testes e validações
-        run: |
-          echo "Iniciando a validação do código recebido no PR..."
-          echo "Instalando dependências..."
-          echo "Rodando testes de segurança..."
-          echo "Tudo aprovado! O código está seguro para fazer o merge."
+      - name: 🟢 Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+
+      - name: 📦 Instalar dependências
+        run: npm ci
+
+      - name: 🏗️ Build (checagem de tipos)
+        run: npm run build
+
+      - name: 🧪 Testes com cobertura
+        run: npm run test:coverage
+
+      - name: 🔒 Auditoria de dependências
+        run: npm audit --audit-level=high
+
+      - name: 📊 Relatório de cobertura (falha)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/lcov-report
+          retention-days: 7
+
+
