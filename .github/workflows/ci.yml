@@ -1,0 +1,46 @@
+name: Pipeline de Validacao (CI)
+
+on:
+  pull_request:
+    branches: [DEV, main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validar-codigo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Baixar o código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+
+      - name: 📦 Instalar dependências
+        run: npm ci
+
+      - name: 🏗️ Build (checagem de tipos)
+        run: npm run build
+
+      - name: 🧪 Testes com cobertura
+        run: npm run test:coverage
+
+      - name: 🔒 Auditoria de dependências
+        run: npm audit --audit-level=high
+
+      - name: 📊 Relatório de cobertura (falha)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/lcov-report
+          retention-days: 7
+
+
